@@ -53,12 +53,24 @@ def rawimage():
 
 @app.route('/api/dotproduct', methods=['POST'])
 def dotproduct():
-    pass
+    data = request.get_json()
+    a = data.get("a", [])
+    b = data.get("b", [])
+    if len(a) != len(b):
+        return Response(jsonpickle.encode({"error": "Vectors must have same length"}), status=400, mimetype="application/json")
+    dot = sum(x * y for x, y in zip(a, b))
+    return Response(jsonpickle.encode({"dot_product": dot}), mimetype="application/json")
 
-# route http posts to this method
 @app.route('/api/jsonimage', methods=['POST'])
 def jsonimage():
-    pass
+    data = request.get_json()
+    img_b64 = data.get("image", "")
+    if not img_b64:
+        return Response(jsonpickle.encode({"error": "No image provided"}), status=400, mimetype="application/json")
+    img_bytes = base64.b64decode(img_b64)
+    img = Image.open(io.BytesIO(img_bytes))
+    width, height = img.size
+    return Response(jsonpickle.encode({"width": width, "height": height}), mimetype="application/json")
 
 # start flask app
-app.run(host="0.0.0.0", port=5000)
+app.run(host="0.0.0.0", port=5001)

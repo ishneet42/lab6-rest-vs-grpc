@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+service ImageMath {
+  rpc Add (AddRequest) returns (AddReply);
+  rpc RawImage (ImageData) returns (ImageReply);
+  rpc DotProduct (Vectors) returns (DotReply);
+  rpc JsonImage (JsonImageData) returns (ImageReply);
+}
+
+message AddRequest {
+  int32 a = 1;
+  int32 b = 2;
+}
+
+message AddReply {
+  int32 sum = 1;
+}
+
+message ImageData {
+  bytes data = 1;
+}
+
+message JsonImageData {
+  string image = 1; // base64-encoded image string
+}
+
+message ImageReply {
+  int32 width = 1;
+  int32 height = 2;
+}
+
+message Vectors {
+  repeated float a = 1;
+  repeated float b = 2;
+}
+
+message DotReply {
+  float dot_product = 1;
+}
